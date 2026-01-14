@@ -379,34 +379,12 @@ main {
   outline: none;
 }
 
-.about-image-container:hover {
-  transform: scale(0.95);
-  opacity: 0.7;
-}
-
 .about-image-container img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
   transition: filter 0.3s ease-out;
-}
-
-.about-image-container:hover img {
-  filter: blur(2px);
-}
-
-.image-fallback {
-  position: absolute;
-  inset: 0;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 1rem;
-  font-family: 'NEXONLv1GothicLight', sans-serif;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
 }
 
 
@@ -605,3 +583,553 @@ main {
   }
 }
 
+/* ============================================
+   고급 효과들 추가
+   ============================================ */
+
+/* 1. 글래스모피즘 효과 강화 */
+.theme-toggle,
+.language-toggle {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.theme-toggle:hover,
+.language-toggle:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* 3. 언어 토글 마이크로 인터랙션 */
+.lang-changed {
+  animation: langBorderGlow 0.3s ease-out;
+}
+
+@keyframes langBorderGlow {
+  0% {
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      0 0 0 rgba(255, 215, 0, 0);
+  }
+  50% {
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      0 0 20px rgba(255, 215, 0, 0.8);
+  }
+  100% {
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      0 0 0 rgba(255, 215, 0, 0);
+  }
+}
+
+.lang-text-fade {
+  animation: langTextFade 0.3s ease-out;
+}
+
+@keyframes langTextFade {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 5. 이미지 호흡 애니메이션 */
+.about-image-container {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+/* 6. 배경 그라데이션 이동 효과 */
+.about-section {
+  background: 
+    radial-gradient(circle at 30% 50%, rgba(96, 165, 250, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 70% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+    #2a2a2a;
+  background-size: 200% 200%;
+  animation: gradientShift 20s ease infinite;
+}
+
+.about-section.light {
+  background: 
+    radial-gradient(circle at 30% 50%, rgba(96, 165, 250, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 70% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
+    #f5f5f5;
+  background-size: 200% 200%;
+  animation: gradientShift 20s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* 7. 이미지-텍스트 상호작용 */
+.text-highlight .gamer-highlight {
+  transition: all 0.3s ease-out;
+}
+
+.gamer-glow {
+  color: #7ab4ff !important;
+  text-shadow: 
+    0 0 20px rgba(122, 180, 255, 0.8),
+    0 0 30px rgba(122, 180, 255, 0.6),
+    0 0 40px rgba(122, 180, 255, 0.4) !important;
+  transform: scale(1.05);
+}
+
+.image-tilt {
+  transform: translateY(var(--scroll-y, 0px)) rotate(1deg);
+  transition: transform 0.3s ease-out;
+}
+
+.image-tilt .about-image-container {
+  box-shadow: 
+    0 0 0 1px rgba(96, 165, 250, 0.1),
+    0 8px 30px rgba(0, 0, 0, 0.4),
+    inset 0 0 30px rgba(0, 0, 0, 0.2),
+    0 0 40px rgba(96, 165, 250, 0.3);
+}
+
+/* 8. 서브타이틀 레터스페이싱 호버 효과 */
+.section-subtitle {
+  letter-spacing: 0.5px;
+  transition: letter-spacing 0.3s ease-out, color 0.3s ease-out, transform 0.3s ease-out;
+}
+
+.section-subtitle:hover {
+  letter-spacing: 2px;
+}
+
+/* 9. 스크롤 진입 시 단계적 등장 애니메이션 조정 */
+.fade-delay-1 {
+  animation-delay: 0.08s;
+}
+
+.fade-delay-2 {
+  animation-delay: 0.16s;
+}
+
+.fade-delay-3 {
+  animation-delay: 0.24s;
+}
+
+.fade-delay-4 {
+  animation-delay: 0.32s;
+}
+
+/* 10. 프로필 이미지 카드 효과 강화 */
+.about-image-container {
+  position: relative;
+}
+
+.about-image-container::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 22px;
+  padding: 2px;
+  background: linear-gradient(
+    135deg,
+    rgba(96, 165, 250, 0.3),
+    rgba(139, 92, 246, 0.3),
+    rgba(236, 72, 153, 0.3)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+  pointer-events: none;
+}
+
+.about-image-container:hover::before {
+  opacity: 1;
+}
+
+/* 11. 텍스트 호버 시 이미지 반응 */
+.about-text:hover ~ .about-image-wrapper .about-image-container,
+.about-heading:hover ~ .about-text ~ .about-image-wrapper .about-image-container {
+  transform: scale(0.98) rotate(-0.5deg);
+  transition: transform 0.3s ease-out;
+}
+
+/* 12. 이미지 호버 시 텍스트 반응 */
+.about-image-container:hover ~ * .gamer-highlight,
+.about-image-wrapper:hover ~ * .gamer-highlight {
+  color: #7ab4ff !important;
+  text-shadow: 
+    0 0 15px rgba(122, 180, 255, 0.8),
+    0 0 25px rgba(122, 180, 255, 0.6) !important;
+}
+
+/* 13. 스크롤 패럴랙스 최적화 */
+.about-section .container > * {
+  will-change: transform;
+}
+
+/* 14. 성능 최적화 */
+.about-image-container img {
+  will-change: filter;
+}
+
+.section-title,
+.section-subtitle,
+.about-heading,
+.about-text {
+  will-change: transform;
+}
+
+/* 15. 다크모드 전환 시 별 효과 */
+.theme-toggle.theme-changed .star {
+  animation: starBurst 0.5s ease-out forwards;
+}
+
+.theme-toggle.theme-changed .star.star-1 {
+  animation-delay: 0s;
+}
+
+.theme-toggle.theme-changed .star.star-2 {
+  animation-delay: 0.1s;
+}
+
+.theme-toggle.theme-changed .star.star-3 {
+  animation-delay: 0.2s;
+}
+
+.theme-toggle.theme-changed .star.star-4 {
+  animation-delay: 0.3s;
+}
+
+.theme-toggle.theme-changed .star.star-5 {
+  animation-delay: 0.4s;
+}
+
+.theme-toggle.theme-changed .star.star-6 {
+  animation-delay: 0.5s;
+}
+
+/* ============================================
+   갤러리 스타일
+   ============================================ */
+
+/* 갤러리 모드 전환 버튼 */
+.gallery-mode-toggle {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+  margin-top: 0.5rem;
+}
+
+.mode-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.7);
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'NEXONLv1GothicLight', sans-serif;
+  font-size: 0.85rem;
+  transition: all 0.3s ease-out;
+  backdrop-filter: blur(10px);
+}
+
+.mode-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.mode-btn.active {
+  background: rgba(96, 165, 250, 0.3);
+  border-color: rgba(96, 165, 250, 0.5);
+  color: #60a5fa;
+  box-shadow: 0 0 15px rgba(96, 165, 250, 0.3);
+}
+
+.about-section.light .mode-btn {
+  border-color: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.about-section.light .mode-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: rgba(0, 0, 0, 0.9);
+}
+
+.about-section.light .mode-btn.active {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: rgba(59, 130, 246, 0.4);
+  color: #3b82f6;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+}
+
+/* 미니멀 캐러셀 스타일 */
+.carousel-gallery {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.carousel-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 100%;
+}
+
+.carousel-slide {
+  min-width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease-out;
+  z-index: 10;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.carousel-arrow:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-arrow-left {
+  left: -50px;
+}
+
+.carousel-arrow-right {
+  right: -50px;
+}
+
+.carousel-dots {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.carousel-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease-out;
+  padding: 0;
+}
+
+.carousel-dot:hover {
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(1.2);
+}
+
+.carousel-dot.active {
+  background: #60a5fa;
+  width: 24px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
+}
+
+.about-section.light .carousel-dot {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.about-section.light .carousel-dot:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.about-section.light .carousel-dot.active {
+  background: #3b82f6;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+}
+
+/* 스택 카드 스타일 */
+.stack-gallery {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  height: 500px;
+  margin: 0 auto;
+  cursor: grab;
+  user-select: none;
+}
+
+.stack-gallery:active {
+  cursor: grabbing;
+}
+
+.stack-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: center;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease-out, box-shadow 0.4s ease-out;
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 1;
+}
+
+.stack-card.dragging {
+  transition: none;
+}
+
+.stack-card.active {
+  cursor: grab;
+}
+
+.stack-card.active:active {
+  cursor: grabbing;
+}
+
+/* 클릭해서 중앙에 띄운 카드 (유희왕 카드처럼 강조) */
+.stack-card.focused {
+  transform: translate(-50%, -50%) scale(1.15) rotate(0deg) !important;
+  box-shadow: 
+    0 20px 50px rgba(0, 0, 0, 0.7),
+    0 0 40px rgba(96, 165, 250, 0.7);
+}
+
+.stack-card.focused .about-image-container {
+  box-shadow: 
+    0 0 0 1px rgba(255, 255, 255, 0.4),
+    0 15px 40px rgba(0, 0, 0, 0.8),
+    0 0 40px rgba(96, 165, 250, 0.9);
+}
+
+.stack-card.focused img {
+  transform: perspective(800px) rotateY(0deg);
+  transition: transform 0.4s ease-out;
+}
+
+.stack-indicator {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  z-index: 20;
+}
+
+.stack-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease-out;
+  padding: 0;
+}
+
+.stack-dot:hover {
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(1.2);
+}
+
+.stack-dot.active {
+  background: #60a5fa;
+  width: 24px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
+}
+
+.about-section.light .stack-dot {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.about-section.light .stack-dot:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.about-section.light .stack-dot.active {
+  background: #3b82f6;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .carousel-arrow-left {
+    left: 10px;
+  }
+
+  .carousel-arrow-right {
+    right: 10px;
+  }
+
+  .carousel-arrow {
+    width: 35px;
+    height: 35px;
+  }
+
+  .gallery-mode-toggle {
+    gap: 0.25rem;
+  }
+
+  .mode-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
+  }
+}
