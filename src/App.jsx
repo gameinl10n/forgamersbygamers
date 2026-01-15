@@ -81,7 +81,6 @@ function App() {
   const [typingText, setTypingText] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const [isImageHovered, setIsImageHovered] = useState(false)
-  const [isTextHovered, setIsTextHovered] = useState(false)
   const [languageChanged, setLanguageChanged] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(2)
   const [stackOffset, setStackOffset] = useState(0)
@@ -224,38 +223,14 @@ function App() {
     }
   }
 
-  const [showShareModal, setShowShareModal] = useState(false)
-
-  // 공유 기능
+  // 공유 기능 - 바로 링크 복사
   const handleShare = async () => {
-    const shareData = {
-      title: translations[language].title,
-      text: translations[language].heading,
-      url: window.location.href
-    }
-
-    try {
-      if (navigator.share) {
-        await navigator.share(shareData)
-      } else {
-        // 커스텀 공유 모달 표시
-        setShowShareModal(true)
-      }
-    } catch (err) {
-      if (err.name !== 'AbortError') {
-        setShowShareModal(true)
-      }
-    }
-  }
-
-  const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href)
-      setShowShareModal(false)
       // 성공 메시지 (간단한 토스트)
       const toast = document.createElement('div')
       toast.textContent = '링크가 복사되었습니다!'
-      toast.style.cssText = 'position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 1rem 2rem; border-radius: 25px; z-index: 10000; animation: fadeInUp 0.3s ease-out;'
+      toast.style.cssText = 'position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 1rem 2rem; border-radius: 25px; z-index: 10000; animation: fadeInUp 0.3s ease-out; font-family: "NEXONLv1GothicLight", sans-serif;'
       document.body.appendChild(toast)
       setTimeout(() => {
         toast.style.animation = 'fadeOut 0.3s ease-out'
@@ -263,6 +238,8 @@ function App() {
       }, 2000)
     } catch (err) {
       console.log('복사 실패:', err)
+      // 폴백: 알림 표시
+      alert('링크 복사에 실패했습니다. 브라우저를 확인해주세요.')
     }
   }
 
@@ -355,43 +332,28 @@ function App() {
         aria-label="Share"
         title="Share this page"
       >
+        <div className="share-tooltip">
+          공유하기 버튼을 눌러 링크를 공유할 수 있습니다
+        </div>
         <svg className="share-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <circle className="share-star star-1" cx="20" cy="30" r="3" fill="#ffd700" />
-          <circle className="share-star star-2" cx="50" cy="20" r="2.5" fill="#ffd700" />
-          <circle className="share-star star-3" cx="80" cy="30" r="3" fill="#ffd700" />
-          <circle className="share-star star-4" cx="30" cy="60" r="2.5" fill="#ffd700" />
-          <circle className="share-star star-5" cx="70" cy="60" r="2.5" fill="#ffd700" />
-          <circle className="share-star star-6" cx="50" cy="70" r="2.5" fill="#ffd700" />
-          <path
-            d="M35 50 L50 35 L65 50 M50 35 L50 65"
-            stroke="#ffd700"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            fill="none"
-          />
+          {/* 표준 공유 아이콘 - 중심 */}
+          <g className="share-path" transform="translate(50, 50)">
+            <circle cx="0" cy="-18" r="7" fill="none" stroke="#ffd700" strokeWidth="2.5" />
+            <circle cx="-15" cy="10" r="7" fill="none" stroke="#ffd700" strokeWidth="2.5" />
+            <circle cx="15" cy="10" r="7" fill="none" stroke="#ffd700" strokeWidth="2.5" />
+            <line x1="0" y1="-11" x2="-10" y2="3" stroke="#ffd700" strokeWidth="2.5" strokeLinecap="round" />
+            <line x1="0" y1="-11" x2="10" y2="3" stroke="#ffd700" strokeWidth="2.5" strokeLinecap="round" />
+          </g>
+          {/* 북두칠성 패턴 - 공유 아이콘 밖으로 배치 (겹치지 않도록) */}
+          <circle className="share-star star-1" cx="50" cy="8" r="2.5" fill="#ffd700" />
+          <circle className="share-star star-2" cx="72" cy="20" r="3" fill="#ffd700" />
+          <circle className="share-star star-3" cx="78" cy="50" r="2.5" fill="#ffd700" />
+          <circle className="share-star star-4" cx="50" cy="85" r="2.5" fill="#ffd700" />
+          <circle className="share-star star-5" cx="22" cy="50" r="3" fill="#ffd700" />
+          <circle className="share-star star-6" cx="28" cy="20" r="2.5" fill="#ffd700" />
+          <circle className="share-star star-7" cx="50" cy="28" r="2.5" fill="#ffd700" />
         </svg>
       </button>
-      {/* 공유 모달 */}
-      {showShareModal && (
-        <div className="share-modal-overlay" onClick={() => setShowShareModal(false)}>
-          <div className="share-modal" onClick={(e) => e.stopPropagation()}>
-            <button className="share-modal-close" onClick={() => setShowShareModal(false)}>×</button>
-            <h3>페이지 공유</h3>
-            <div className="share-modal-content">
-              <input 
-                type="text" 
-                readOnly 
-                value={window.location.href}
-                className="share-modal-input"
-              />
-              <button className="share-modal-copy" onClick={copyToClipboard}>
-                링크 복사
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
       <button 
         className={`language-toggle ${languageChanged ? 'lang-changed' : ''}`} 
         onClick={toggleLanguage} 
@@ -425,9 +387,6 @@ function App() {
         <section 
           id="home" 
           className={`about-section ${isDarkMode ? 'dark' : 'light'} ${language === 'zh' ? 'chinese-font' : ''}`}
-          style={{
-            backgroundPosition: `${50 + scrollY * 0.1}% ${50 + scrollY * 0.05}%`
-          }}
           onClick={(e) => {
             // 카드, 인디케이터, 토글 버튼이 아닌 곳을 클릭했을 때만 확대 해제
             if (focusedIndex !== null && 
@@ -452,8 +411,6 @@ function App() {
               style={{
                 transform: `translateY(${-scrollY * 0.08}px)`
               }}
-              onMouseEnter={() => setIsTextHovered(true)}
-              onMouseLeave={() => setIsTextHovered(false)}
             >
               {typingText}
               {isTyping && <span className="typing-cursor">|</span>}
@@ -471,8 +428,6 @@ function App() {
               style={{
                 transform: `translateY(${-scrollY * 0.08}px)`
               }}
-              onMouseEnter={() => setIsTextHovered(true)}
-              onMouseLeave={() => setIsTextHovered(false)}
             >
               <p className="about-paragraph">
                 {language === 'en' ? (
