@@ -20,7 +20,7 @@ const translations = {
     title: 'About 병욱',
     subtitle: 'Unfolding the quiet story of me',
     heading: '현지화 전문가는 번역가가 아닙니다',
-    paragraph: '언어의 문화, 사회, 정치, 예술적 지식을 기반으로 하여금 작품의 완성도를 최고로 올리는 최종 문화 검수자입니다',
+    paragraph: '언어의 문화, 사회, 정치, 예술적 지식을 기반으로 하여금 작품의 완성도를 최고로 올리는 최종 문화 검수자입니다.',
     language: '언어',
     culture: '문화',
     society: '사회',
@@ -31,10 +31,10 @@ const translations = {
     ending2: '게이머에게 다가가기 위해 노력합니다'
   },
   zh: {
-    title: 'About 小权',
+    title: 'About 权兵昱',
     subtitle: 'Unfolding the quiet story of me',
-    heading: '本地化专家不仅仅是翻译',
-    paragraph: '作为最终的文化审查者，通过利用对语言、文化、社会、政治和艺术的理解，最大化作品的完整性。我试图以游戏玩家的身份接触用户，而不仅仅是作为一份工作。',
+    heading: '游戏是所有学问和文化相结合的结晶',
+    paragraph: '本地化专家不是翻译家。以语言的文化、社会、政治、艺术知识为基础，提高作品完成度的最终文化验收专家。作为一个玩家，而不是职业，努力接近用户。',
     language: '语言',
     culture: '文化',
     society: '社会',
@@ -48,18 +48,38 @@ const translations = {
 
 // 이미지 배열
 const images = [
-  '/images/profile.jpg',
-  '/images/profile.jpg',
-  '/images/profile.jpg',
-  '/images/profile.jpg',
-  '/images/profile.jpg'
+  { src: '/images/profile1.jpg', caption: { en: 'Presentation', ko: '발표', zh: '演示' } },
+  { src: '/images/profile2.jpg', caption: { en: 'Workshop', ko: '워크샵', zh: '研讨会' } },
+  { src: '/images/profile3.jpg', caption: { en: 'Conference', ko: '컨퍼런스', zh: '会议' } },
+  { src: '/images/profile4.jpg', caption: { en: 'Collaboration', ko: '협업', zh: '合作' } },
+  { src: '/images/profile5.jpg', caption: { en: 'Project', ko: '프로젝트', zh: '项目' } }
 ]
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false)
-  const [isDarkMode, setIsDarkMode] = useState(true)
-  const [language, setLanguage] = useState('en')
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    // 다크모드 자동 감지
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('darkMode')
+      if (saved !== null) return saved === 'true'
+      return window.matchMedia('(prefers-color-scheme: dark)').matches
+    }
+    return true
+  })
+  const [language, setLanguage] = useState(() => {
+    // 언어 자동 감지
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('language')
+      if (saved) return saved
+      const browserLang = navigator.language || navigator.userLanguage
+      if (browserLang.startsWith('ko')) return 'ko'
+      if (browserLang.startsWith('zh')) return 'zh'
+    }
+    return 'en'
+  })
   const [scrollY, setScrollY] = useState(0)
+  const [typingText, setTypingText] = useState('')
+  const [isTyping, setIsTyping] = useState(false)
   const [isImageHovered, setIsImageHovered] = useState(false)
   const [isTextHovered, setIsTextHovered] = useState(false)
   const [languageChanged, setLanguageChanged] = useState(false)
@@ -68,6 +88,7 @@ function App() {
   const [stackOffsetY, setStackOffsetY] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
   const [focusedIndex, setFocusedIndex] = useState(null)
+  const [imageLoading, setImageLoading] = useState({})
   const dragStartRef = useRef(0)
   const dragStartYRef = useRef(0)
   const currentOffsetRef = useRef(0)
@@ -76,6 +97,13 @@ function App() {
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoaded(true), 100)
+    // 이미지 로딩 상태 초기화
+    // false = 로드 완료 또는 아직 로드 시도 안 함, true = 로딩 중, 'error' = 로드 실패
+    const initialLoading = {}
+    images.forEach((_, index) => {
+      initialLoading[index] = false // 초기에는 이미지가 보이도록 설정
+    })
+    setImageLoading(initialLoading)
     return () => clearTimeout(timer)
   }, [])
 
@@ -88,18 +116,86 @@ function App() {
   }, [])
 
   const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode)
+    const newMode = !isDarkMode
+    setIsDarkMode(newMode)
+    localStorage.setItem('darkMode', newMode.toString())
   }
 
   const toggleLanguage = () => {
     setLanguageChanged(true)
     setLanguage(prev => {
-      if (prev === 'en') return 'ko'
-      if (prev === 'ko') return 'zh'
-      return 'en'
+      const next = prev === 'en' ? 'ko' : prev === 'ko' ? 'zh' : 'en'
+      localStorage.setItem('language', next)
+      return next
     })
     setTimeout(() => setLanguageChanged(false), 300)
   }
+
+  // 타이핑 애니메이션
+  useEffect(() => {
+    const t = translations[language]
+    const fullText = t.subtitle
+    let currentIndex = 0
+    setIsTyping(true)
+    setTypingText('')
+
+    const typeInterval = setInterval(() => {
+      if (currentIndex < fullText.length) {
+        setTypingText(fullText.slice(0, currentIndex + 1))
+        currentIndex++
+      } else {
+        setIsTyping(false)
+        clearInterval(typeInterval)
+      }
+    }, 50)
+
+    return () => clearInterval(typeInterval)
+  }, [language])
+
+  // 키보드 네비게이션
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // ESC: 확대된 이미지 닫기
+      if (e.key === 'Escape' && focusedIndex !== null) {
+        setFocusedIndex(null)
+      }
+      // 화살표 키: 이미지 넘기기
+      if (focusedIndex === null) {
+        if (e.key === 'ArrowLeft') {
+          setCurrentImageIndex(prev => (prev - 1 + images.length) % images.length)
+        } else if (e.key === 'ArrowRight') {
+          setCurrentImageIndex(prev => (prev + 1) % images.length)
+        }
+      }
+      // L: 언어 변경
+      if ((e.key === 'l' || e.key === 'L') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        toggleLanguage()
+      }
+      // T: 테마 변경
+      if ((e.key === 't' || e.key === 'T') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        toggleTheme()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focusedIndex])
+
+  // 다크모드 시스템 설정 감지 (localStorage가 없을 때만)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+      const handleChange = (e) => {
+        // localStorage에 저장된 값이 없을 때만 시스템 설정 따름
+        if (localStorage.getItem('darkMode') === null) {
+          setIsDarkMode(e.matches)
+        }
+      }
+      mediaQuery.addEventListener('change', handleChange)
+      return () => mediaQuery.removeEventListener('change', handleChange)
+    }
+  }, [])
 
   const handleStackMouseDown = (e) => {
     if (focusedIndex !== null) return
@@ -111,6 +207,63 @@ function App() {
     dragStartYRef.current = startY
     currentOffsetRef.current = 0
     hasDraggedRef.current = false
+  }
+
+  const handleWheel = (e) => {
+    if (focusedIndex !== null) return
+    
+    e.preventDefault()
+    const deltaY = e.deltaY
+    
+    if (deltaY > 0) {
+      // 휠을 아래로 내리면 다음 이미지
+      setCurrentImageIndex((prev) => (prev + 1) % images.length)
+    } else if (deltaY < 0) {
+      // 휠을 위로 올리면 이전 이미지
+      setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length)
+    }
+  }
+
+  const [showShareModal, setShowShareModal] = useState(false)
+
+  // 공유 기능
+  const handleShare = async () => {
+    const shareData = {
+      title: translations[language].title,
+      text: translations[language].heading,
+      url: window.location.href
+    }
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData)
+      } else {
+        // 커스텀 공유 모달 표시
+        setShowShareModal(true)
+      }
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        setShowShareModal(true)
+      }
+    }
+  }
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href)
+      setShowShareModal(false)
+      // 성공 메시지 (간단한 토스트)
+      const toast = document.createElement('div')
+      toast.textContent = '링크가 복사되었습니다!'
+      toast.style.cssText = 'position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 1rem 2rem; border-radius: 25px; z-index: 10000; animation: fadeInUp 0.3s ease-out;'
+      document.body.appendChild(toast)
+      setTimeout(() => {
+        toast.style.animation = 'fadeOut 0.3s ease-out'
+        setTimeout(() => toast.remove(), 300)
+      }, 2000)
+    } catch (err) {
+      console.log('복사 실패:', err)
+    }
   }
 
   useEffect(() => {
@@ -197,6 +350,49 @@ function App() {
         </svg>
       </button>
       <button 
+        className="share-button"
+        onClick={handleShare}
+        aria-label="Share"
+        title="Share this page"
+      >
+        <svg className="share-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle className="share-star star-1" cx="20" cy="30" r="3" fill="#ffd700" />
+          <circle className="share-star star-2" cx="50" cy="20" r="2.5" fill="#ffd700" />
+          <circle className="share-star star-3" cx="80" cy="30" r="3" fill="#ffd700" />
+          <circle className="share-star star-4" cx="30" cy="60" r="2.5" fill="#ffd700" />
+          <circle className="share-star star-5" cx="70" cy="60" r="2.5" fill="#ffd700" />
+          <circle className="share-star star-6" cx="50" cy="70" r="2.5" fill="#ffd700" />
+          <path
+            d="M35 50 L50 35 L65 50 M50 35 L50 65"
+            stroke="#ffd700"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+          />
+        </svg>
+      </button>
+      {/* 공유 모달 */}
+      {showShareModal && (
+        <div className="share-modal-overlay" onClick={() => setShowShareModal(false)}>
+          <div className="share-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="share-modal-close" onClick={() => setShowShareModal(false)}>×</button>
+            <h3>페이지 공유</h3>
+            <div className="share-modal-content">
+              <input 
+                type="text" 
+                readOnly 
+                value={window.location.href}
+                className="share-modal-input"
+              />
+              <button className="share-modal-copy" onClick={copyToClipboard}>
+                링크 복사
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      <button 
         className={`language-toggle ${languageChanged ? 'lang-changed' : ''}`} 
         onClick={toggleLanguage} 
         aria-label="Toggle language"
@@ -228,7 +424,7 @@ function App() {
       <main>
         <section 
           id="home" 
-          className={`about-section ${isDarkMode ? 'dark' : 'light'}`}
+          className={`about-section ${isDarkMode ? 'dark' : 'light'} ${language === 'zh' ? 'chinese-font' : ''}`}
           style={{
             backgroundPosition: `${50 + scrollY * 0.1}% ${50 + scrollY * 0.05}%`
           }}
@@ -236,7 +432,6 @@ function App() {
             // 카드, 인디케이터, 토글 버튼이 아닌 곳을 클릭했을 때만 확대 해제
             if (focusedIndex !== null && 
                 !e.target.closest('.stack-card') && 
-                !e.target.closest('.stack-indicator') &&
                 !e.target.closest('.theme-toggle') &&
                 !e.target.closest('.language-toggle')) {
               setFocusedIndex(null)
@@ -260,7 +455,8 @@ function App() {
               onMouseEnter={() => setIsTextHovered(true)}
               onMouseLeave={() => setIsTextHovered(false)}
             >
-              {t.subtitle}
+              {typingText}
+              {isTyping && <span className="typing-cursor">|</span>}
             </p>
             <h3 
               className={`about-heading ${isLoaded ? 'fade-in-up' : ''} fade-delay-2`}
@@ -271,7 +467,7 @@ function App() {
               {t.heading}
             </h3>
             <div 
-              className={`about-text ${isLoaded ? 'fade-in-up' : ''} fade-delay-3 ${isImageHovered ? 'text-highlight' : ''}`}
+              className={`about-text ${isLoaded ? 'fade-in-up' : ''} fade-delay-3`}
               style={{
                 transform: `translateY(${-scrollY * 0.08}px)`
               }}
@@ -285,17 +481,21 @@ function App() {
                     <span className="highlight">{t.language}</span>, <span className="highlight">{t.culture}</span>,{' '}
                     <span className="highlight">{t.society}</span>, <span className="highlight">{t.politics}</span>, and{' '}
                     <span className="highlight">{t.arts}</span>. {t.ending}{' '}
-                    <span className={`highlight gamer-highlight ${isImageHovered ? 'gamer-glow' : ''}`}>{t.gamer}</span>, {t.ending2}
+                    <span className="highlight gamer-highlight">{t.gamer}</span>, {t.ending2}
+                  </>
+                ) : language === 'ko' ? (
+                  <>
+                    <span className="highlight">{t.language}</span>의 <span className="highlight">{t.culture}</span>, <span className="highlight">{t.society}</span>, <span className="highlight">{t.politics}</span>, <span className="highlight">{t.arts}</span>적 지식을 기반으로 하여금 작품의 완성도를 최고로 올리는 최종 문화 검수자입니다. {t.ending}, <span className="highlight gamer-highlight">{t.gamer}</span>에게 다가가기 위해 노력합니다.
                   </>
                 ) : (
                   <>
-                    {t.paragraph}
+                    本地化专家不是翻译家。以<span className="highlight">{t.language}</span>的<span className="highlight">{t.culture}</span>、<span className="highlight">{t.society}</span>、<span className="highlight">{t.politics}</span>、<span className="highlight">{t.arts}</span>知识为基础，提高作品完成度的最终文化验收专家。{t.ending}<span className="highlight gamer-highlight">{t.gamer}</span>{t.ending2}
                   </>
                 )}
               </p>
             </div>
             <div 
-              className={`about-image-wrapper ${isLoaded ? 'fade-in-up' : ''} fade-delay-4 ${isTextHovered ? 'image-tilt' : ''}`}
+              className={`about-image-wrapper ${isLoaded ? 'fade-in-up' : ''} fade-delay-4`}
               style={{
                 transform: `translateY(${scrollY * 0.1}px)`
               }}
@@ -304,6 +504,7 @@ function App() {
                 ref={stackRef}
                 className="stack-gallery"
                 onMouseDown={handleStackMouseDown}
+                onWheel={handleWheel}
                 onTouchStart={(e) => {
                   if (focusedIndex !== null) return
 
@@ -392,32 +593,51 @@ function App() {
                       }}
                     >
                       <div 
-                        className="about-image-container"
-                        onMouseEnter={() => setIsImageHovered(true)}
+                        className={`about-image-container ${isImageHovered && index === currentImageIndex ? 'image-hovered' : ''}`}
+                        onMouseEnter={() => {
+                          if (index === currentImageIndex) {
+                            setIsImageHovered(true)
+                          }
+                        }}
                         onMouseLeave={() => setIsImageHovered(false)}
                       >
+                        {imageLoading[index] === true && (
+                          <div className="image-loading">
+                            <div className="loading-spinner"></div>
+                          </div>
+                        )}
                         <img 
-                          src={img} 
+                          src={typeof img === 'string' ? img : img.src}
                           alt={`BYEONGUK ${index + 1}`}
                           draggable={false}
+                          loading={index > 2 ? "lazy" : "eager"}
+                          onLoadStart={() => {
+                            // 이미지 로딩이 시작되면 true로 설정 (스피너 표시)
+                            setImageLoading(prev => {
+                              if (prev[index] === false) {
+                                return { ...prev, [index]: true }
+                              }
+                              return prev
+                            })
+                          }}
+                          onLoad={() => {
+                            // 이미지 로드 완료 - 스피너 숨기고 이미지 표시
+                            setImageLoading(prev => ({ ...prev, [index]: false }))
+                          }}
+                          onError={() => {
+                            // 이미지 로드 실패 - 실제 네트워크 문제일 때만 스피너 표시
+                            setImageLoading(prev => ({ ...prev, [index]: 'error' }))
+                          }}
+                          style={{ 
+                            opacity: imageLoading[index] === false ? 1 : 0,
+                            transition: 'opacity 0.3s ease-out',
+                            display: imageLoading[index] === false ? 'block' : imageLoading[index] === 'error' ? 'none' : 'block'
+                          }}
                         />
                       </div>
                     </div>
                   )
                 })}
-                <div className="stack-indicator">
-                  {images.map((_, index) => (
-                    <button
-                      key={index}
-                      className={`stack-dot ${index === currentImageIndex ? 'active' : ''}`}
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        setCurrentImageIndex(index)
-                      }}
-                      aria-label={`Go to image ${index + 1}`}
-                    />
-                  ))}
-                </div>
               </div>
             </div>
           </div>
