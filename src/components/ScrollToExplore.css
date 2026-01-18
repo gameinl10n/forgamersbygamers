@@ -1,0 +1,83 @@
+.scroll-to-explore {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.scroll-to-explore-text {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: clamp(0.75rem, 1vw, 0.9rem);
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.dark-mode .scroll-to-explore-text {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.light-mode .scroll-to-explore-text {
+  color: rgba(31, 41, 55, 0.7);
+}
+
+.scroll-to-explore-icon-container {
+  width: 40px;
+  height: 40px;
+  background: rgba(80, 80, 80, 0.95);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.dark-mode .scroll-to-explore-icon-container {
+  background: rgba(80, 80, 80, 0.95);
+}
+
+.light-mode .scroll-to-explore-icon-container {
+  background: rgba(180, 180, 180, 0.9);
+}
+
+.scroll-to-explore-arrow {
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: bold;
+  animation: scrollArrowAnimation 2s infinite;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.dark-mode .scroll-to-explore-arrow {
+  color: #fff;
+}
+
+.light-mode .scroll-to-explore-arrow {
+  color: #1f2937;
+}
+
+@keyframes scrollArrowAnimation {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translateY(-12px);
+  }
+  30% {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateY(0);
+  }
+  70% {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translateY(12px);
+  }
+}

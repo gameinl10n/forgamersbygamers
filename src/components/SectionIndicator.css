@@ -1,0 +1,94 @@
+.section-indicator {
+  position: fixed;
+  left: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.section-indicator-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease-out;
+  position: relative;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.section-indicator-dot:hover {
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(1.3);
+}
+
+.section-indicator-dot.active {
+  background: #ffd700;
+  border-color: #ffd700;
+  width: 16px;
+  height: 16px;
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+}
+
+.section-indicator-label {
+  position: absolute;
+  left: calc(100% + 1rem);
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease-out;
+  font-family: 'CookieRun', sans-serif;
+}
+
+.section-indicator-dot:hover .section-indicator-label,
+.section-indicator-dot.active .section-indicator-label {
+  opacity: 1;
+}
+
+.dark-mode .section-indicator-dot {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.dark-mode .section-indicator-label {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.light-mode .section-indicator-dot {
+  background: rgba(31, 41, 55, 0.3);
+  border-color: rgba(31, 41, 55, 0.5);
+}
+
+.light-mode .section-indicator-label {
+  color: rgba(31, 41, 55, 0.8);
+}
+
+@media (max-width: 768px) {
+  .section-indicator {
+    left: 1rem;
+    gap: 1rem;
+  }
+  
+  .section-indicator-dot {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .section-indicator-dot.active {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .section-indicator-label {
+    display: none;
+  }
+}

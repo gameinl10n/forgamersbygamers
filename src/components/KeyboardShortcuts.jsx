@@ -22,6 +22,7 @@ const KeyboardShortcuts = memo(({ language, translations }) => {
 
   const shortcuts = {
     en: [
+      { key: '↑ / ↓', description: 'Navigate sections' },
       { key: 'L', description: 'Change language' },
       { key: 'T', description: 'Toggle theme' },
       { key: '← / →', description: 'Navigate images' },
@@ -29,6 +30,7 @@ const KeyboardShortcuts = memo(({ language, translations }) => {
       { key: '?', description: 'Show/hide this help' }
     ],
     ko: [
+      { key: '↑ / ↓', description: '섹션 간 이동' },
       { key: 'L', description: '언어 변경' },
       { key: 'T', description: '테마 변경' },
       { key: '← / →', description: '이미지 넘기기' },
@@ -36,6 +38,7 @@ const KeyboardShortcuts = memo(({ language, translations }) => {
       { key: '?', description: '도움말 표시/숨기기' }
     ],
     zh: [
+      { key: '↑ / ↓', description: '切换部分' },
       { key: 'L', description: '更改语言' },
       { key: 'T', description: '切换主题' },
       { key: '← / →', description: '切换图片' },

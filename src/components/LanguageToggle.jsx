@@ -1,14 +1,21 @@
 import { memo } from 'react'
 import './LanguageToggle.css'
 
-const LanguageToggle = memo(({ language, languageChanged, onToggle, tooltip, ariaLabel }) => {
+const LanguageToggle = memo(({ language, languageChanged, onToggle, tooltip, ariaLabel, isLanguageMismatched }) => {
   return (
     <button 
-      className={`language-toggle ${languageChanged ? 'lang-changed' : ''}`} 
+      className={`language-toggle ${languageChanged ? 'lang-changed' : ''} ${isLanguageMismatched ? 'language-mismatched' : ''}`} 
       onClick={onToggle} 
       aria-label={ariaLabel || 'Toggle language'}
       type="button"
     >
+      {isLanguageMismatched && (
+        <>
+          <span className="language-ripple language-ripple-1"></span>
+          <span className="language-ripple language-ripple-2"></span>
+          <span className="language-ripple language-ripple-3"></span>
+        </>
+      )}
       <div className={`language-tooltip ${language === 'zh' ? 'chinese-font' : ''}`}>
         {tooltip}
       </div>
@@ -24,11 +31,12 @@ const LanguageToggle = memo(({ language, languageChanged, onToggle, tooltip, ari
           y="55"
           textAnchor="middle"
           dominantBaseline="middle"
-          fontSize="24"
-          fontWeight="bold"
+          fontSize="28"
+          fontWeight="normal"
           fill="#ffd700"
           className={`language-text ${languageChanged ? 'lang-text-fade' : ''}`}
           aria-hidden="true"
+          style={{ fontFamily: "'CookieRun', sans-serif" }}
         >
           {language.toUpperCase()}
         </text>

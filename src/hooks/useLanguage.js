@@ -22,6 +22,17 @@ export const useLanguage = () => {
   })
   const [languageChanged, setLanguageChanged] = useState(false)
 
+  // 시스템 언어 감지
+  const systemLanguage = typeof window !== 'undefined' ? (() => {
+    const browserLang = navigator.language || navigator.userLanguage
+    if (browserLang.startsWith('ko')) return 'ko'
+    if (browserLang.startsWith('zh')) return 'zh'
+    return 'en'
+  })() : 'en'
+
+  // 시스템 언어와 현재 표시 언어가 다른지 확인
+  const isLanguageMismatched = language !== systemLanguage
+
   const toggleLanguage = () => {
     setLanguageChanged(true)
     setLanguage(prev => {
@@ -33,5 +44,5 @@ export const useLanguage = () => {
     setTimeout(() => setLanguageChanged(false), 300)
   }
 
-  return { language, toggleLanguage, languageChanged }
+  return { language, toggleLanguage, languageChanged, isLanguageMismatched }
 }

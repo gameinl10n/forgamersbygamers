@@ -8,7 +8,7 @@ const ImageGallery = memo(({ images, currentIndex, onImageChange, onImageFocus, 
   const [imageLoading, setImageLoading] = useState(() => {
     const loading = {}
     for (let i = 0; i < images.length; i++) {
-      loading[i] = false
+      loading[i] = true // 초기값을 true로 설정 (로딩 중으로 시작)
     }
     return loading
   })
@@ -17,6 +17,7 @@ const ImageGallery = memo(({ images, currentIndex, onImageChange, onImageFocus, 
   const currentOffsetRef = useRef(0)
   const hasDraggedRef = useRef(false)
   const stackRef = useRef(null)
+  const imgRefs = useRef({})
 
   const startDrag = useCallback((clientX, clientY) => {
     if (focusedIndex !== null) return
@@ -31,16 +32,17 @@ const ImageGallery = memo(({ images, currentIndex, onImageChange, onImageFocus, 
     startDrag(e.clientX, e.clientY)
   }, [startDrag])
 
-  const handleWheel = (e) => {
+  const handleWheel = useCallback((e) => {
     if (focusedIndex !== null) return
     e.preventDefault()
+    e.stopPropagation()
     const deltaY = e.deltaY
     if (deltaY > 0) {
       onImageChange((prev) => (prev + 1) % images.length)
     } else if (deltaY < 0) {
       onImageChange((prev) => (prev - 1 + images.length) % images.length)
     }
-  }
+  }, [focusedIndex, images.length, onImageChange])
 
   const handleMove = useCallback((clientX, clientY) => {
     if (!isDragging) return
@@ -97,6 +99,28 @@ const ImageGallery = memo(({ images, currentIndex, onImageChange, onImageFocus, 
       window.removeEventListener('touchend', touchEnd)
     }
   }, [isDragging, handleMove, handleDragEnd])
+
+  // 이미지가 이미 로드되어 있는지 확인 (캐시된 경우)
+  useEffect(() => {
+    const checkCachedImages = () => {
+      Object.keys(imgRefs.current).forEach(index => {
+        const imgEl = imgRefs.current[index]
+        if (imgEl?.complete && imgEl.naturalHeight !== 0) {
+          setImageLoading(prev => {
+            if (prev[index] !== false) {
+              return { ...prev, [index]: false }
+            }
+            return prev
+          })
+        }
+      })
+    }
+    
+    // 즉시 확인하고, 다음 프레임에서도 확인 (이미지가 아직 마운트되지 않았을 수 있음)
+    checkCachedImages()
+    const rafId = requestAnimationFrame(checkCachedImages)
+    return () => cancelAnimationFrame(rafId)
+  }, [images])
 
   return (
     <div 
@@ -166,28 +190,63 @@ const ImageGallery = memo(({ images, currentIndex, onImageChange, onImageFocus, 
                   <div className="loading-spinner"></div>
                 </div>
               )}
+              {imageLoading[index] === 'error' && (
+                <div className="image-error" role="alert" aria-label="Image failed to load">
+                  <p>이미지를 불러올 수 없습니다</p>
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setImageLoading(prev => ({ ...prev, [index]: true }))
+                      const imgElement = e.target.closest('.about-image-container').querySelector('img')
+                      if (imgElement) {
+                        imgElement.src = imgElement.src + '?retry=' + Date.now()
+                      }
+                    }}
+                    className="image-retry-btn"
+                  >
+                    다시 시도
+                  </button>
+                </div>
+              )}
               <img 
-                src={typeof img === 'string' ? img : img.src}
-                srcSet={typeof img === 'object' && img.srcSet ? img.srcSet : undefined}
+                ref={(el) => {
+                  if (el) {
+                    imgRefs.current[index] = el
+                    // 이미지가 이미 로드되어 있으면 즉시 표시
+                    if (el.complete && el.naturalHeight !== 0) {
+                      setImageLoading(prev => {
+                        if (prev[index] !== false) {
+                          return { ...prev, [index]: false }
+                        }
+                        return prev
+                      })
+                    }
+                  } else {
+                    delete imgRefs.current[index]
+                  }
+                }}
+                src={typeof img === 'string' ? img : (img.src || img.fallback)}
                 alt={`BYEONGUK ${index + 1}`}
                 draggable={false}
                 loading={index > 2 ? "lazy" : "eager"}
                 decoding="async"
                 fetchpriority={index === currentIndex ? "high" : "low"}
-                sizes="(max-width: 768px) 75vw, (max-width: 1200px) 50vw, 400px"
-                onLoadStart={() => {
-                  setImageLoading(prev => prev[index] !== true ? { ...prev, [index]: true } : prev)
-                }}
                 onLoad={() => {
-                  setImageLoading(prev => prev[index] !== false ? { ...prev, [index]: false } : prev)
+                  setImageLoading(prev => ({ ...prev, [index]: false }))
                 }}
-                onError={() => {
-                  setImageLoading(prev => prev[index] !== 'error' ? { ...prev, [index]: 'error' } : prev)
+                onError={(e) => {
+                  // 이미지 로드 실패 시 fallback 이미지로 전환
+                  const currentImg = typeof img === 'string' ? img : img
+                  if (typeof currentImg === 'object' && currentImg.fallback && e.target.src !== currentImg.fallback) {
+                    e.target.src = currentImg.fallback
+                    return
+                  }
+                  setImageLoading(prev => ({ ...prev, [index]: 'error' }))
                 }}
                 style={{ 
                   opacity: imageLoading[index] === false ? 1 : 0,
                   transition: 'opacity 0.3s ease-out',
-                  display: imageLoading[index] === false ? 'block' : imageLoading[index] === 'error' ? 'none' : 'block'
+                  display: imageLoading[index] === 'error' ? 'none' : 'block'
                 }}
               />
             </div>

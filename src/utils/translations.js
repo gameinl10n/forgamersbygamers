@@ -15,7 +15,13 @@ export const translations = {
     linkCopied: 'Link copied!',
     shareTooltip: 'Click to share the link',
     languageTooltip: 'The language cycles through EN - KO - ZH. Click the button to change the display language',
-    description: 'Portfolio website of BYEONGUK, a localization specialist and gamer'
+    description: 'Portfolio website of BYEONGUK, a localization specialist and gamer',
+    welcomeBanner: 'I LOVE WHAT I DO',
+    welcomeTitle: 'Hello World !',
+    welcomeSubtitle: "Let's Get it",
+    welcomeQuote: 'Hello world! Thank you for showing me the world of programming',
+    scrollToExplore: 'Scroll to explore',
+    ipGreeting: 'You are connected from IP'
   },
   ko: {
     title: 'About 병욱',
@@ -33,7 +39,13 @@ export const translations = {
     linkCopied: '링크가 복사되었습니다!',
     shareTooltip: '공유하기 버튼을 눌러 링크를 공유할 수 있습니다',
     languageTooltip: 'EN - KO - ZH 순서로 언어가 순환됩니다. 표시 언어를 바꾸고 싶으면 버튼을 눌러주세요',
-    description: '현지화 전문가이자 게이머인 병욱의 포트폴리오 웹사이트'
+    description: '현지화 전문가이자 게이머인 병욱의 포트폴리오 웹사이트',
+    welcomeBanner: 'I LOVE WHAT I DO',
+    welcomeTitle: 'Hello World !',
+    welcomeSubtitle: '시작해볼까요',
+    welcomeQuote: '안녕 세계! 나에게 프로그래밍 세상을 보여줘서 고마워',
+    scrollToExplore: '스크롤하여 탐색하기',
+    ipGreeting: '아이피에서 접속하셨습니다'
   },
   zh: {
     title: 'About 权兵昱',
@@ -51,14 +63,45 @@ export const translations = {
     linkCopied: '链接已复制！',
     shareTooltip: '点击分享按钮可以分享链接',
     languageTooltip: '语言按EN - KO - ZH顺序循环。点击按钮可更改显示语言',
-    description: '本地化专家和游戏玩家权兵昱的作品集网站'
+    description: '本地化专家和游戏玩家权兵昱的作品集网站',
+    welcomeBanner: 'I LOVE WHAT I DO',
+    welcomeTitle: 'Hello World !',
+    welcomeSubtitle: '让我们开始吧',
+    welcomeQuote: '你好世界！谢谢你向我展示了编程的世界',
+    scrollToExplore: '滚动探索',
+    ipGreeting: '您来自IP地址访问'
   }
 }
 
 export const images = [
-  { src: '/images/profile1.jpg', caption: { en: 'Presentation', ko: '발표', zh: '演示' } },
-  { src: '/images/profile2.jpg', caption: { en: 'Workshop', ko: '워크샵', zh: '研讨会' } },
-  { src: '/images/profile3.jpg', caption: { en: 'Conference', ko: '컨퍼런스', zh: '会议' } },
-  { src: '/images/profile4.jpg', caption: { en: 'Collaboration', ko: '협업', zh: '合作' } },
-  { src: '/images/profile5.jpg', caption: { en: 'Project', ko: '프로젝트', zh: '项目' } }
+  { 
+    src: '/images/profile1.jpg',
+    srcSet: '/images/profile1.webp 1x, /images/profile1@2x.webp 2x',
+    fallback: '/images/profile1.jpg',
+    caption: { en: 'Presentation', ko: '발표', zh: '演示' }
+  },
+  { 
+    src: '/images/profile2.jpg',
+    srcSet: '/images/profile2.webp 1x, /images/profile2@2x.webp 2x',
+    fallback: '/images/profile2.jpg',
+    caption: { en: 'Workshop', ko: '워크샵', zh: '研讨会' }
+  },
+  { 
+    src: '/images/profile3.jpg',
+    srcSet: '/images/profile3.webp 1x, /images/profile3@2x.webp 2x',
+    fallback: '/images/profile3.jpg',
+    caption: { en: 'Conference', ko: '컨퍼런스', zh: '会议' }
+  },
+  { 
+    src: '/images/profile4.jpg',
+    srcSet: '/images/profile4.webp 1x, /images/profile4@2x.webp 2x',
+    fallback: '/images/profile4.jpg',
+    caption: { en: 'Collaboration', ko: '협업', zh: '合作' }
+  },
+  { 
+    src: '/images/profile5.jpg',
+    srcSet: '/images/profile5.webp 1x, /images/profile5@2x.webp 2x',
+    fallback: '/images/profile5.jpg',
+    caption: { en: 'Project', ko: '프로젝트', zh: '项目' }
+  }
 ]

@@ -2,10 +2,35 @@
   min-height: 100vh;
   position: relative;
   z-index: 0;
+  background: #2a2a2a;
+  transition: background-color 0.5s ease-out;
+}
+
+.App.dark-mode {
+  background: #2a2a2a;
+}
+
+.App.light-mode {
+  background: #f5f5f5;
 }
 
 main {
   padding-top: 0;
+  background: #2a2a2a;
+  transition: background-color 0.5s ease-out;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  overflow: hidden;
+  height: 100vh;
+  position: relative;
+}
+
+.dark-mode main {
+  background: #2a2a2a;
+}
+
+.light-mode main {
+  background: #f5f5f5;
 }
 
 /* 테마 토글 버튼 */
@@ -217,6 +242,44 @@ main {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
+.language-ripple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.language-ripple-1 {
+  animation: languageRipple 2s ease-out infinite;
+}
+
+.language-ripple-2 {
+  animation: languageRipple 2s ease-out infinite 0.7s;
+}
+
+.language-ripple-3 {
+  animation: languageRipple 2s ease-out infinite 1.4s;
+}
+
+@keyframes languageRipple {
+  0% {
+    width: 60px;
+    height: 60px;
+    opacity: 0.8;
+  }
+  100% {
+    width: 120px;
+    height: 120px;
+    opacity: 0;
+  }
+}
+
 .language-toggle:hover {
   transform: scale(1.1);
   background: rgba(255, 255, 255, 0.15);
@@ -296,6 +359,8 @@ main {
 .language-text {
   filter: drop-shadow(0 0 6px rgba(255, 215, 0, 1));
   animation: langTextGlow 2s ease-in-out infinite;
+  font-family: 'CookieRun', sans-serif;
+  font-size: 28px;
 }
 
 @keyframes langTwinkle {
@@ -401,6 +466,10 @@ main {
 }
 
 .about-section {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100vh;
   padding: 1rem 0;
   background: #2a2a2a;
@@ -410,6 +479,15 @@ main {
   overflow-x: hidden;
   overflow-y: auto;
   transition: background-color 0.5s ease-out, color 0.5s ease-out;
+}
+
+.about-section::-webkit-scrollbar {
+  display: none;
+}
+
+.about-section {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .about-section.light {
@@ -1414,7 +1492,295 @@ main {
   51%, 100% { opacity: 0; }
 }
 
+/* 스크롤 전환 섹션 */
+.scroll-transition-section {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100vh;
+  height: 100vh;
+}
+
+.top-section {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  padding: 1rem 0;
+  background: #2a2a2a;
+  color: white;
+  display: flex;
+  align-items: center;
+  overflow-x: hidden;
+  overflow-y: auto;
+  transition: background-color 0.5s ease-out, color 0.5s ease-out;
+}
+
+.top-section::-webkit-scrollbar {
+  display: none;
+}
+
+.top-section {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.top-section.light {
+  background: #f5f5f5;
+  color: #1f2937;
+}
+
+.top-section-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+.top-section-title {
+  color: inherit;
+  font-size: clamp(2.2rem, 6.5vw, 4.5rem);
+  font-weight: bold;
+  text-align: center;
+  margin: 0;
+  line-height: 1.2;
+  font-family: 'CookieRun', sans-serif;
+}
+
+.welcome-banner {
+  position: relative;
+  background: #2F2F2F;
+  border: 2px solid #ffd700;
+  border-radius: 20px;
+  padding: 0.5rem 1.5rem;
+  font-size: clamp(0.65rem, 1.1vw, 0.95rem);
+  font-weight: normal;
+  color: #ffd700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+  font-family: 'CookieRun', sans-serif;
+}
+
+.welcome-banner::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid #ffd700;
+}
+
+.welcome-subtitle {
+  font-size: clamp(1.4rem, 4vw, 3.2rem);
+  font-weight: bold;
+  text-align: center;
+  margin: 0;
+  color: inherit;
+  white-space: nowrap;
+  line-height: 1.3;
+  font-family: 'CookieRun', sans-serif;
+}
+
+.rotating-language {
+  color: #ffd700;
+  display: inline-block;
+  min-width: 0.1em;
+  transition: width 0.2s ease-out;
+}
+
+.typing-cursor {
+  display: inline-block;
+  color: #fff;
+  font-weight: 300;
+  margin-left: 2px;
+  animation: blink 1s infinite;
+}
+
+.dark-mode .typing-cursor {
+  color: #fff;
+}
+
+.light-mode .typing-cursor {
+  color: #1f2937;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.welcome-quote {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  color: inherit;
+  gap: 0.8rem;
+}
+
+.quote-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.quote-icon {
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: #fff;
+  margin: 0;
+  opacity: 1;
+  line-height: 1;
+  font-family: 'CookieRun', sans-serif;
+  font-weight: normal;
+}
+
+.quote-line {
+  flex: 1;
+  height: 1px;
+  background: #fff;
+  opacity: 0.6;
+  max-width: 120px;
+}
+
+.quote-line-left {
+  margin-right: 0;
+}
+
+.quote-line-right {
+  margin-left: 0;
+}
+
+.dark-mode .quote-icon,
+.dark-mode .quote-line {
+  color: #fff;
+}
+
+.light-mode .quote-icon,
+.light-mode .quote-line {
+  color: #1f2937;
+}
+
+.quote-text {
+  font-size: clamp(0.85rem, 1.2vw, 1rem);
+  text-align: center;
+  margin: 0;
+  color: #fff;
+  opacity: 1;
+  line-height: 1.5;
+  font-family: 'CookieRun', sans-serif;
+  max-width: 600px;
+}
+
+.dark-mode .quote-text {
+  color: #fff;
+}
+
+.light-mode .quote-text {
+  color: #1f2937;
+}
+
+.new-section {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  padding: 1rem 0;
+  background: #2a2a2a;
+  color: white;
+  display: flex;
+  align-items: center;
+  overflow-x: hidden;
+  overflow-y: auto;
+  transition: background-color 0.5s ease-out, color 0.5s ease-out;
+}
+
+.new-section::-webkit-scrollbar {
+  display: none;
+}
+
+.new-section {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.new-section.light {
+  background: #f5f5f5;
+  color: #1f2937;
+}
+
+.new-section-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.new-section-title {
+  color: inherit;
+}
+
 /* 이미지 로딩 스피너 */
+.image-error {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(40, 40, 40, 0.9);
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+  border-radius: 20px;
+}
+
+.image-error p {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+  font-family: 'NEXONLv1GothicLight', sans-serif;
+}
+
+.image-retry-btn {
+  padding: 0.5rem 1rem;
+  background: #60a5fa;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'NEXONLv1GothicLight', sans-serif;
+  font-size: 0.85rem;
+  transition: background 0.3s ease-out;
+}
+
+.image-retry-btn:hover {
+  background: #3b82f6;
+}
+
 .image-loading {
   position: absolute;
   top: 50%;
