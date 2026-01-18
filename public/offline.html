@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline - BYEONGUK Portfolio</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'NEXONLv1GothicLight', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #2a2a2a;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    .offline-container {
+      text-align: center;
+      max-width: 500px;
+    }
+    .offline-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    p {
+      color: #b0b0b0;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+    button {
+      background: #60a5fa;
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    button:hover {
+      background: #3b82f6;
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  <div class="offline-container">
+    <div class="offline-icon">📴</div>
+    <h1>오프라인 상태</h1>
+    <p>인터넷 연결이 필요합니다. 연결을 확인하고 다시 시도해주세요.</p>
+    <button onclick="window.location.reload()">새로고침</button>
+  </div>
+</body>
+</html>

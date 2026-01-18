@@ -1,0 +1,21 @@
+{
+  "name": "BYEONGUK Portfolio",
+  "short_name": "BYEONGUK",
+  "description": "Portfolio website of BYEONGUK, a localization specialist and gamer",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#2a2a2a",
+  "theme_color": "#60a5fa",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["portfolio", "business"],
+  "lang": "en",
+  "dir": "ltr"
+}
