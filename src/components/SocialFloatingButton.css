@@ -1,0 +1,287 @@
+.social-floating {
+  position: fixed;
+  right: 1.5rem;
+  bottom: calc(2rem + 40px + 0.75rem + 1.5rem);
+  z-index: 1000;
+}
+
+/* 메인 플로팅 버튼: theme/language/share와 동일한 모양 (스타일은 App.css 공통 규칙 사용) */
+.social-main-btn {
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.social-main-icon {
+  width: 52px;
+  height: 32px;
+  color: currentColor;
+  overflow: visible;
+  transition: transform 0.3s ease-out;
+}
+
+.social-main-btn:hover .social-main-icon {
+  transform: scale(1.05);
+}
+
+/* 편지지 ↔ 종이비행기 전환 애니메이션 */
+.social-main-icon .letter,
+.social-main-icon .paper-plane {
+  transform-origin: 50% 50%;
+  transition:
+    transform 0.4s ease-out,
+    opacity 0.4s ease-out;
+}
+
+.social-main-icon .letter {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+.social-main-icon .paper-plane {
+  opacity: 0;
+  transform: translate(-10px, 8px) scale(0.85);
+}
+
+.social-main-btn:hover .social-main-icon .letter,
+.social-floating.open .social-main-icon .letter {
+  opacity: 0;
+  transform: translate(-10px, -8px) rotate(-10deg) scale(0.9);
+}
+
+.social-main-btn:hover .social-main-icon .paper-plane,
+.social-floating.open .social-main-icon .paper-plane {
+  opacity: 1;
+  transform: translate(8px, -8px) scale(1.05);
+}
+
+/* 별 장식 살짝 반짝임 */
+.contact-star {
+  fill: currentColor;
+  opacity: 0.5;
+  animation: contactStarTwinkle 2.4s ease-in-out infinite;
+}
+
+.contact-star.star-2 {
+  animation-delay: 0.4s;
+}
+
+.contact-star.star-3 {
+  animation-delay: 0.8s;
+}
+
+.contact-star.star-4 {
+  animation-delay: 1.2s;
+}
+
+@keyframes contactStarTwinkle {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.2);
+  }
+}
+
+/* 아이콘 팝오버 컨테이너 */
+.social-popover {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  transform-origin: bottom right;
+}
+
+.social-floating.open .social-popover {
+  pointer-events: auto;
+}
+
+.social-icon-btn {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  background: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e5e7eb;
+  text-decoration: none;
+  transition: all 0.3s ease-out;
+  opacity: 0;
+  /* 버튼 원(60px)의 정확한 중심(30, 30)에 아이콘 중심(22, 22)이 오도록 보정한 시작점 */
+  bottom: 8px; /* 30 - 아이콘 반지름(22) */
+  right: 8px;  /* 30 - 아이콘 반지름(22) */
+  transform: translate(0, 0) scale(0);
+  transform-origin: center center;
+}
+
+/* 브랜드 기본 색상 설정 */
+.social-icon-btn.social-instagram {
+  color: #f97316;
+}
+
+.social-icon-btn.social-linkedin {
+  color: #0a66c2;
+}
+
+.social-icon-btn.social-brunch {
+  color: #10b981;
+}
+
+.social-icon-btn.social-mobiinside {
+  color: #f97316;
+}
+
+.social-icon-btn.social-steam {
+  color: #38bdf8;
+}
+
+.social-icon-btn.social-tistory {
+  color: #ea580c;
+}
+
+.social-icon-btn.social-playstation {
+  color: #3b82f6;
+}
+
+/* 열렸을 때 각 아이콘이 튀어나오는 애니메이션 */
+.social-floating.open .social-icon-btn {
+  animation: popOut 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.social-floating.open .social-icon-btn:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+.social-floating.open .social-icon-btn:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.social-floating.open .social-icon-btn:nth-child(3) {
+  animation-delay: 0.15s;
+}
+
+.social-floating.open .social-icon-btn:nth-child(4) {
+  animation-delay: 0.2s;
+}
+
+.social-floating.open .social-icon-btn:nth-child(5) {
+  animation-delay: 0.25s;
+}
+
+.social-floating.open .social-icon-btn:nth-child(6) {
+  animation-delay: 0.3s;
+}
+
+.social-floating.open .social-icon-btn:nth-child(7) {
+  animation-delay: 0.35s;
+}
+
+/* 닫힐 때 애니메이션 */
+.social-floating:not(.open) .social-icon-btn {
+  animation: popIn 0.3s ease-in forwards;
+}
+
+@keyframes popOut {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0);
+  }
+  50% {
+    transform: translate(
+        calc(var(--tx, 0px) * 1.1),
+        calc(var(--ty, 0px) * 1.1)
+      )
+      scale(1.15);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(var(--tx, 0px), var(--ty, 0px)) scale(1);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 1;
+    transform: translate(var(--tx, 0px), var(--ty, 0px)) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0);
+  }
+}
+
+.social-icon-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* 개별 브랜드 컬러 터치 */
+.social-icon-btn.social-instagram:hover {
+  background: radial-gradient(circle at 30% 30%, #f9a8d4, #7c2d12);
+  border-color: #f9a8d4;
+  color: #0b1120;
+}
+
+.social-icon-btn.social-linkedin:hover {
+  background: #0a66c2;
+  border-color: #93c5fd;
+  color: #e5e7eb;
+}
+
+.social-icon-btn.social-brunch:hover {
+  background: #10b981;
+  border-color: #6ee7b7;
+  color: #f9fafb;
+}
+
+.social-icon-btn.social-mobiinside:hover {
+  background: #f97316;
+  border-color: #fed7aa;
+  color: #0b1120;
+}
+
+.social-icon-btn.social-steam:hover {
+  background: #111827;
+  border-color: #38bdf8;
+  color: #e5e7eb;
+}
+
+.social-icon-btn.social-tistory:hover {
+  background: #ea580c;
+  border-color: #fed7aa;
+  color: #0b1120;
+}
+
+.social-icon-btn.social-playstation:hover {
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  border-color: #bfdbfe;
+  color: #f9fafb;
+}
+
+.social-icon-btn:hover {
+  /* hover 시에는 살짝만 확대 (기존 위치 기준) */
+  transform: translate(var(--tx, 0px), var(--ty, 0px)) scale(1.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+@media (max-width: 640px) {
+  .social-floating {
+    right: 1.1rem;
+    bottom: 1.1rem;
+  }
+}
+

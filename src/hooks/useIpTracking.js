@@ -6,6 +6,11 @@ import { showToast } from '../components/Toast'
  */
 export const useIpTracking = (language, translations) => {
   useEffect(() => {
+    // 브라우저 환경이 아니거나 로컬 개발 환경/오프라인이면 실행하지 않음
+    if (typeof window === 'undefined' || typeof navigator === 'undefined') return
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') return
+    if (!navigator.onLine) return
+
     // 세션 스토리지에 표시 여부 확인 (새로고침 시에는 다시 표시하지 않음)
     const hasShown = sessionStorage.getItem('ipGreetingShown')
     if (hasShown) return
@@ -21,7 +26,6 @@ export const useIpTracking = (language, translations) => {
         ]
 
         let ipAddress = null
-        let lastError = null
 
         for (const apiUrl of apis) {
           try {
@@ -44,16 +48,15 @@ export const useIpTracking = (language, translations) => {
             ipAddress = data.ip || data.query
 
             if (ipAddress) break
-          } catch (error) {
-            lastError = error
-            console.warn(`IP API failed (${apiUrl}):`, error.message)
+          } catch {
             // 다음 API 시도
             continue
           }
         }
 
         if (!ipAddress) {
-          throw lastError || new Error('Failed to fetch IP address from all APIs')
+          // 모든 API가 실패하면 조용히 종료 (콘솔에 에러 표시 안 함)
+          return
         }
 
         // IP 주소가 성공적으로 가져와졌다면 안내 메시지 표시
@@ -70,9 +73,8 @@ export const useIpTracking = (language, translations) => {
           sessionStorage.setItem('ipGreetingShown', 'true')
         }, 2000)
 
-      } catch (error) {
-        // IP 가져오기 실패 시 무시 (에러 로그만 출력)
-        console.warn('Failed to fetch IP address:', error.message)
+      } catch {
+        // 완전히 실패해도 앱 동작에는 영향 없으므로 조용히 무시
       }
     }
 

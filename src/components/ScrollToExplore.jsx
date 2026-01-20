@@ -1,10 +1,7 @@
 import { memo } from 'react'
-import { useLanguage } from '../hooks/useLanguage'
-import { translations } from '../utils/translations'
 import './ScrollToExplore.css'
 
-const ScrollToExplore = memo(() => {
-  const { language } = useLanguage()
+const ScrollToExplore = memo(({ language, translations }) => {
   const t = translations[language]
 
   return (

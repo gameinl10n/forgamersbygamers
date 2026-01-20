@@ -17,11 +17,12 @@ export const translations = {
     languageTooltip: 'Languages rotate in the order EN → KO → ZH. Press the button to change the display language',
     description: 'Portfolio website of BYEONGUK, a localization specialist and gamer',
     welcomeBanner: 'I LOVE WHAT I DO',
-    welcomeTitle: 'Hello World !',
-    welcomeSubtitle: "Let's Get it",
-    welcomeQuote: 'Hello world! Thank you for showing me the world of programming',
+    welcomeTitle: 'GAMER TO GAMER',
+    welcomeSubtitle: "I love",
+    welcomeQuote: 'By the Gamer, Of the Gamer, For the Gamer...',
     scrollToExplore: 'Scroll to explore',
-    ipGreeting: 'You are connected from IP'
+    ipGreeting: 'You are connected from IP',
+    rightClickBlocked: "Right-click is disabled. Anything I can help you with?"
   },
   ko: {
     title: 'About 병욱',
@@ -40,15 +41,16 @@ export const translations = {
     shareTooltip: '공유하기 버튼을 눌러 링크를 공유할 수 있습니다',
     languageTooltip: 'EN → KO → ZH 순서로 언어가 순환됩니다. 표시 언어를 바꾸고 싶으면 버튼을 눌러주세요',
     description: '현지화 전문가이자 게이머인 병욱의 포트폴리오 웹사이트',
-    welcomeBanner: 'I LOVE WHAT I DO',
-    welcomeTitle: 'Hello World !',
-    welcomeSubtitle: '시작해볼까요',
-    welcomeQuote: '안녕 세계! 나에게 프로그래밍 세상을 보여줘서 고마워',
+    welcomeBanner: '난 내가 하는 일을 사랑해',
+    welcomeTitle: '게이머가 게이머에게',
+    welcomeSubtitle: '난 좋아해',
+    welcomeQuote: '게이머의, 게이머에 의한, 게이머를 위한...',
     scrollToExplore: '스크롤하여 탐색하기',
-    ipGreeting: '아이피에서 접속하셨습니다'
+    ipGreeting: '아이피에서 접속하셨습니다',
+    rightClickBlocked: '아쉽지만 우클릭을 막아뒀어요! 무슨 일이시죠?'
   },
   zh: {
-    title: 'About 权兵昱',
+    title: 'About 权兵昱（小权）',
     subtitle: 'Unfolding the quiet story of me',
     heading: '游戏是所有学问和文化相结合的结晶',
     paragraph: '本地化专家不是翻译家。以语言的文化、社会、政治、艺术知识为基础，提高作品完成度的最终文化验收专家。作为一个玩家，而不是职业，努力接近用户。',
@@ -64,12 +66,13 @@ export const translations = {
     shareTooltip: '点击分享按钮可以分享链接',
     languageTooltip: '语言将按照 EN → KO → ZH 的顺序循环切换。如需切换显示语言，请点击按钮',
     description: '本地化专家和游戏玩家权兵昱的作品集网站',
-    welcomeBanner: 'I LOVE WHAT I DO',
-    welcomeTitle: 'Hello World !',
-    welcomeSubtitle: '让我们开始吧',
-    welcomeQuote: '你好世界！谢谢你向我展示了编程的世界',
+    welcomeBanner: '我热爱我所做的一切',
+    welcomeTitle: '玩家给玩家',
+    welcomeSubtitle: '我喜欢',
+    welcomeQuote: '玩家的, 源自玩家, 成于玩家...',
     scrollToExplore: '滚动探索',
-    ipGreeting: '您来自IP地址访问'
+    ipGreeting: '您来自IP地址访问',
+    rightClickBlocked: '很抱歉，右键已被禁用！有什么需要帮忙的吗？'
   }
 }
 

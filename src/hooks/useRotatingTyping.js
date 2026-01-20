@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 
-const LANGUAGES = ['Kotlin', 'JavaScript', 'PHP', 'Python', 'TypeScript', 'Java', 'Go', 'Rust']
+const LANGUAGES = ['Localization', 'Translation', 'Game', 'Programming', 'Writing', 'Editing']
 
 export const useRotatingTyping = (typingSpeed = 80, deletingSpeed = 50, deleteDelay = 2000) => {
   const [displayedText, setDisplayedText] = useState('')
@@ -38,7 +38,8 @@ export const useRotatingTyping = (typingSpeed = 80, deletingSpeed = 50, deleteDe
           timeoutRef.current = setTimeout(typeText, typingSpeed)
         } else {
           // 타이핑 완료
-          setIsTyping(false)
+          // 커서가 문장 끝에서 계속 깜빡이도록 유지
+          setIsTyping(true)
           timeoutRef.current = setTimeout(() => {
             // 일정 시간 대기 후 지우기 시작
             isDeletingRef.current = true
@@ -59,3 +60,5 @@ export const useRotatingTyping = (typingSpeed = 80, deletingSpeed = 50, deleteDe
 
   return { displayedText, isTyping }
 }
+
+export default useRotatingTyping

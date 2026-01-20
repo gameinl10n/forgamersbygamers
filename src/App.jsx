@@ -17,6 +17,7 @@ import LanguageToggle from './components/LanguageToggle'
 import ShareButton from './components/ShareButton'
 import ErrorBoundary from './components/ErrorBoundary'
 import LoadingSkeleton from './components/LoadingSkeleton'
+import SocialFloatingButton from './components/SocialFloatingButton'
 import { showToast } from './components/Toast'
 
 // 지연 로딩된 컴포넌트
@@ -55,7 +56,7 @@ function App() {
   useAnalytics()
   useWebVitals()
   useLanguageRouting()
-  useProtection() // 웹사이트 보호 (우클릭 방지, 코드 복사 방지)
+  useProtection(language, translations) // 웹사이트 보호 (우클릭 방지, 코드 복사 방지)
   useIpTracking(language, translations) // IP 주소 추적 및 안내
 
   useEffect(() => {
@@ -480,7 +481,7 @@ function App() {
       <div className={`App ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
         <Suspense fallback={null}>
           <ScrollIndicator />
-          <ScrollToExplore />
+          <ScrollToExplore language={language} translations={translations} />
           <SectionIndicator currentSection={currentSection} />
           <KeyboardShortcuts language={language} translations={translations} />
           <PerformanceMonitor />
@@ -504,6 +505,7 @@ function App() {
           ariaLabel="Toggle language"
           isLanguageMismatched={isLanguageMismatched}
         />
+        <SocialFloatingButton />
         <main>
           {/* 첫 번째 섹션 (최상위) */}
           <div style={{ height: `${transitionRange * 2}px` }}>

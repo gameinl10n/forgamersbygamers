@@ -1,15 +1,29 @@
 import { useEffect } from 'react'
+import { showToast } from '../components/Toast'
 
 /**
  * 웹사이트 보호 훅: 우클릭 방지, 개발자 도구 접근 방지, 코드 복사 방지
  * 주의: 완벽한 보호는 불가능하며, 전문가나 개발자는 우회할 수 있습니다.
  * 일반 사용자에게는 효과적입니다.
  */
-export const useProtection = () => {
+export const useProtection = (language, translations) => {
   useEffect(() => {
+    // 브라우저 환경이 아니면 아무 것도 하지 않음 (SSR 안전)
+    if (typeof window === 'undefined' || typeof document === 'undefined') return
+
+    const t = translations?.[language]
+    let lastRightClickToast = 0
     // 우클릭 방지
     const handleContextMenu = (e) => {
       e.preventDefault()
+
+      // 우클릭 안내 토스트 (과도한 중복 표시 방지를 위해 간단한 쿨다운 적용)
+      const now = Date.now()
+      if (t?.rightClickBlocked && now - lastRightClickToast > 1500) {
+        showToast(t.rightClickBlocked, language)
+        lastRightClickToast = now
+      }
+
       return false
     }
 

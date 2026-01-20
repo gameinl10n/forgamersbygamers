@@ -1190,7 +1190,8 @@ main {
 /* 1. 글래스모피즘 효과 강화 */
 .theme-toggle,
 .language-toggle,
-.share-button {
+.share-button,
+.social-main-btn {
   background: rgba(255, 255, 255, 0.15) !important;
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
@@ -1202,7 +1203,8 @@ main {
 
 .theme-toggle:hover,
 .language-toggle:hover,
-.share-button:hover {
+.share-button:hover,
+.social-main-btn:hover {
   transform: scale(1.1);
   background: rgba(255, 255, 255, 0.25) !important;
   border-color: rgba(255, 255, 255, 0.3);
@@ -1553,6 +1555,16 @@ main {
   margin: 0;
   line-height: 1.2;
   font-family: 'CookieRun', sans-serif;
+  transition: color 0.25s ease-out, text-shadow 0.25s ease-out, transform 0.25s ease-out;
+  cursor: default;
+}
+
+.top-section-title:hover {
+  color: #e5e7eb;
+  text-shadow:
+    0 0 10px rgba(255, 255, 255, 0.7),
+    0 0 20px rgba(96, 165, 250, 0.5);
+  transform: translateY(-2px);
 }
 
 .welcome-banner {
@@ -1568,6 +1580,18 @@ main {
   letter-spacing: 0.5px;
   margin: 0;
   font-family: 'CookieRun', sans-serif;
+  transition: color 0.25s ease-out, box-shadow 0.25s ease-out, transform 0.25s ease-out, background 0.25s ease-out, border-color 0.25s ease-out;
+  cursor: default;
+}
+
+.welcome-banner:hover {
+  background: #3a3a3a;
+  border-color: #fffbaf;
+  color: #fffbaf;
+  box-shadow:
+    0 0 10px rgba(250, 204, 21, 0.6),
+    0 0 25px rgba(250, 204, 21, 0.4);
+  transform: translateY(-1px);
 }
 
 .welcome-banner::after {
@@ -1592,6 +1616,15 @@ main {
   white-space: nowrap;
   line-height: 1.3;
   font-family: 'CookieRun', sans-serif;
+  transition: color 0.25s ease-out, text-shadow 0.25s ease-out, transform 0.25s ease-out;
+}
+
+.welcome-subtitle:hover {
+  color: #e5e7eb;
+  text-shadow:
+    0 0 10px rgba(255, 255, 255, 0.7),
+    0 0 20px rgba(96, 165, 250, 0.5);
+  transform: translateY(-1px);
 }
 
 .rotating-language {
@@ -1638,6 +1671,13 @@ main {
   gap: 1rem;
   width: 100%;
   max-width: 400px;
+  transition: transform 0.25s ease-out, filter 0.25s ease-out;
+  cursor: default;
+}
+
+.quote-header:hover {
+  transform: translateY(-1px);
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.28));
 }
 
 .quote-icon {
@@ -1656,6 +1696,14 @@ main {
   background: #fff;
   opacity: 0.6;
   max-width: 120px;
+  transition: opacity 0.25s ease-out, box-shadow 0.25s ease-out;
+}
+
+.quote-header:hover .quote-line {
+  opacity: 0.9;
+  box-shadow:
+    0 0 10px rgba(255, 255, 255, 0.5),
+    0 0 15px rgba(148, 163, 184, 0.4);
 }
 
 .quote-line-left {
@@ -1685,6 +1733,15 @@ main {
   line-height: 1.5;
   font-family: 'CookieRun', sans-serif;
   max-width: 600px;
+  transition: color 0.25s ease-out, text-shadow 0.25s ease-out, transform 0.25s ease-out;
+  cursor: default;
+}
+
+.quote-text:hover {
+  text-shadow:
+    0 0 10px rgba(255, 255, 255, 0.5),
+    0 0 20px rgba(156, 163, 175, 0.5);
+  transform: translateY(-1px);
 }
 
 .dark-mode .quote-text {
@@ -1807,13 +1864,15 @@ main {
 /* 마이크로 인터랙션 개선 */
 .theme-toggle:active,
 .language-toggle:active,
-.share-button:active {
+.share-button:active,
+.social-main-btn:active {
   transform: scale(0.95);
 }
 
 .theme-toggle,
 .language-toggle,
-.share-button {
+.share-button,
+.social-main-btn {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 

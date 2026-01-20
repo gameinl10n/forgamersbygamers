@@ -1,7 +1,7 @@
 .scroll-to-explore {
   position: fixed;
   bottom: 2rem;
-  right: 2rem;
+  right: 1.5rem;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -14,6 +14,8 @@
   font-size: clamp(0.75rem, 1vw, 0.9rem);
   font-weight: 400;
   white-space: nowrap;
+  /* 아이콘 컨테이너(40px)와 겹치지 않도록 오른쪽 마진 추가 */
+  margin-right: calc(40px + 1rem);
 }
 
 .dark-mode .scroll-to-explore-text {
@@ -32,7 +34,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
+  position: absolute;
+  /* 상단 버튼 중앙(right: 1.5rem + 30px)에 맞추기 위해 
+     부모의 오른쪽 가장자리(right: 1.5rem)에서 30px 왼쪽에 중앙 배치 */
+  right: 30px;
+  transform: translateX(50%);
   overflow: hidden;
 }
 
