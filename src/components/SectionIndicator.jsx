@@ -1,29 +1,31 @@
 import { memo } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { translations } from '../utils/translations'
+import { SECTIONS } from '../utils/sectionConfig'
 import './SectionIndicator.css'
 
-const SectionIndicator = memo(({ currentSection }) => {
+const SectionIndicator = memo(({ currentSection, onSectionClick }) => {
   const { language } = useLanguage()
   const t = translations[language]
 
-  const sections = [
-    { id: 'welcome', name: t.welcomeTitle || 'Welcome' },
-    { id: 'about', name: t.title || 'About' },
-    { id: 'hello', name: '안녕하세요' }
-  ]
+  const sections = SECTIONS.map(({ id, translationKey, name }) => ({
+    id,
+    name: name != null ? name : (t[translationKey] || translationKey)
+  }))
 
   return (
     <div className="section-indicator" role="navigation" aria-label="Section navigation">
       {sections.map((section, index) => (
-        <div
+        <button
           key={section.id}
+          type="button"
           className={`section-indicator-dot ${currentSection === index ? 'active' : ''}`}
           aria-current={currentSection === index ? 'page' : undefined}
           aria-label={section.name}
+          onClick={() => onSectionClick?.(index)}
         >
           <span className="section-indicator-label">{section.name}</span>
-        </div>
+        </button>
       ))}
     </div>
   )

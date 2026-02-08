@@ -18,9 +18,9 @@ import ShareButton from './components/ShareButton'
 import ErrorBoundary from './components/ErrorBoundary'
 import LoadingSkeleton from './components/LoadingSkeleton'
 import SocialFloatingButton from './components/SocialFloatingButton'
+import FootprintsMap from './components/FootprintsMap'
 import { showToast } from './components/Toast'
 
-// 지연 로딩된 컴포넌트
 import ImageGallery from './components/ImageGallery'
 const KeyboardShortcuts = lazy(() => import('./components/KeyboardShortcuts'))
 const OfflinePage = lazy(() => import('./components/OfflinePage'))
@@ -41,7 +41,9 @@ function App() {
   const [focusedIndex, setFocusedIndex] = useState(null)
   const [viewportHeight, setViewportHeight] = useState(0)
   const [isGalleryHovered, setIsGalleryHovered] = useState(false)
-  const scrollBufferRef = useRef(0) // 각 섹션 최대치 도달 후 누적된 스크롤 양
+  const [isMapHovered, setIsMapHovered] = useState(false)
+  const lastMapClickRef = useRef(0)
+  const scrollBufferRef = useRef(0)
   const touchStartRef = useRef({ x: 0, y: 0, time: 0 })
   const scrollHistoryRef = useRef([0])
   
@@ -56,8 +58,8 @@ function App() {
   useAnalytics()
   useWebVitals()
   useLanguageRouting()
-  useProtection(language, translations) // 웹사이트 보호 (우클릭 방지, 코드 복사 방지)
-  useIpTracking(language, translations) // IP 주소 추적 및 안내
+  useProtection(language, translations)
+  useIpTracking(language, translations)
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoaded(true), 100)
@@ -73,7 +75,7 @@ function App() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  // 섹션 범위 계산 (useEffect와 렌더링에서 공통 사용)
+  /* 섹션별 스크롤 구간/임계값 (휠·렌더 공통). 수정 시 useMemo 내부만 변경 */
   const sectionRanges = useMemo(() => {
     const vh = viewportHeight || window.innerHeight || 800
     const transitionRange = vh * 0.5
@@ -114,8 +116,18 @@ function App() {
     } = sectionRanges
     
     const handleWheel = (e) => {
-      // 이미지 갤러리 영역에 마우스가 있으면 스크롤 업데이트 무시
-      if (isGalleryHovered) return
+      if (isGalleryHovered) {
+        e.preventDefault()
+        return
+      }
+      if (Date.now() - lastMapClickRef.current < 500) {
+        e.preventDefault()
+        return
+      }
+      if (isMapHovered) {
+        e.preventDefault()
+        return
+      }
       
       if (!ticking) {
         window.requestAnimationFrame(() => {
@@ -238,8 +250,6 @@ function App() {
         })
         ticking = true
       }
-      
-      // 기본 스크롤 방지
       e.preventDefault()
     }
     
@@ -269,13 +279,13 @@ function App() {
           e.preventDefault()
           setScrollY(prev => {
             if (deltaY < 0) {
-              // 위로 스와이프 (다음 섹션)
-              if (prev < topSectionMax) return secondSectionStart
-              if (prev >= secondSectionStart && prev < secondSectionMax) return thirdSectionStart
+              // 위로 스와이프 (다음 섹션, 최대 확대 위치)
+              if (prev < topSectionMax) return secondSectionEnd
+              if (prev >= secondSectionStart && prev <= secondSectionMax) return thirdSectionEnd
             } else {
               // 아래로 스와이프 (이전 섹션)
               if (prev > secondSectionMax && prev <= thirdSectionMax) return secondSectionEnd
-              if (prev > topSectionMax && prev <= secondSectionMax) return topSectionMax
+              if (prev > topSectionMax && prev <= secondSectionMax) return 0
             }
             return prev
           })
@@ -293,9 +303,9 @@ function App() {
       window.removeEventListener('touchstart', handleTouchStart)
       window.removeEventListener('touchend', handleTouchEnd)
     }
-  }, [isGalleryHovered, sectionRanges])
+  }, [isGalleryHovered, isMapHovered, sectionRanges])
 
-  // 스크롤 히스토리 관리
+  /* 스크롤 히스토리 (브라우저 뒤로가기 연동용). 최대 길이만 바꾸려면 10 수정 */
   useEffect(() => {
     const history = scrollHistoryRef.current
     const lastValue = history[history.length - 1]
@@ -308,7 +318,7 @@ function App() {
     }
   }, [scrollY])
 
-  // 브라우저 히스토리와 동기화
+  /* 브라우저 popstate(뒤로가기) 시 스크롤 복원 */
   useEffect(() => {
     const handlePopState = () => {
       if (scrollHistoryRef.current.length > 1) {
@@ -322,60 +332,47 @@ function App() {
     return () => window.removeEventListener('popstate', handlePopState)
   }, [])
 
-  // 키보드 네비게이션
+  /* 키보드: ESC(이미지 닫기), 화살표(섹션/이미지), L/T(언어·테마) */
   useEffect(() => {
     const handleKeyDown = (e) => {
-      // ESC: 확대된 이미지 닫기
       if (e.key === 'Escape' && focusedIndex !== null) {
         setFocusedIndex(null)
         return
       }
       
-      // 화살표 키: 섹션 이동 (이미지 갤러리가 포커스되지 않았을 때)
-      if (focusedIndex === null && isGalleryHovered === false) {
+      if (focusedIndex === null && !isGalleryHovered && !isMapHovered) {
         const { topSectionMax, secondSectionStart, secondSectionEnd, secondSectionMax, thirdSectionStart, thirdSectionEnd, thirdSectionMax } = sectionRanges
-        
         if (e.key === 'ArrowUp') {
           e.preventDefault()
           setScrollY(prev => {
-            if (prev > secondSectionMax && prev <= thirdSectionMax) {
-              // 안녕하세요 → 어바웃
-              return secondSectionEnd
-            } else if (prev > topSectionMax && prev <= secondSectionMax) {
-              // 어바웃 → 웰컴
-              return topSectionMax
-            }
+            if (prev > secondSectionMax && prev <= thirdSectionMax) return secondSectionEnd
+            if (prev > topSectionMax && prev <= secondSectionMax) return 0
             return prev
           })
           return
-        } else if (e.key === 'ArrowDown') {
+        }
+        if (e.key === 'ArrowDown') {
           e.preventDefault()
           setScrollY(prev => {
-            if (prev < topSectionMax) {
-              // 웰컴 → 어바웃
-              return secondSectionStart
-            } else if (prev >= secondSectionStart && prev < secondSectionMax) {
-              // 어바웃 → 안녕하세요
-              return thirdSectionStart
-            }
+            if (prev < topSectionMax) return secondSectionEnd
+            if (prev >= secondSectionStart && prev <= secondSectionMax) return thirdSectionEnd
             return prev
           })
           return
-        } else if (e.key === 'ArrowLeft') {
+        }
+        if (e.key === 'ArrowLeft') {
           setCurrentImageIndex(prev => (prev - 1 + images.length) % images.length)
           return
-        } else if (e.key === 'ArrowRight') {
+        }
+        if (e.key === 'ArrowRight') {
           setCurrentImageIndex(prev => (prev + 1) % images.length)
           return
         }
       }
-      
-      // L: 언어 변경
       if ((e.key === 'l' || e.key === 'L') && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault()
         toggleLanguage()
       }
-      // T: 테마 변경
       if ((e.key === 't' || e.key === 'T') && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault()
         toggleTheme()
@@ -384,9 +381,9 @@ function App() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [focusedIndex, isGalleryHovered, toggleLanguage, toggleTheme, images.length, sectionRanges])
+  }, [focusedIndex, isGalleryHovered, isMapHovered, toggleLanguage, toggleTheme, images.length, sectionRanges])
 
-  // 공유 기능
+  /* 공유(클립보드 복사) */
   const handleShare = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(window.location.href)
@@ -405,13 +402,24 @@ function App() {
     setFocusedIndex(index)
   }, [])
 
-  // 첫 번째 섹션 효과
+  /* 섹션 인디케이터 클릭 시 해당 섹션으로 스크롤 */
+  const handleSectionClick = useCallback((index) => {
+    const { secondSectionEnd, thirdSectionEnd } = sectionRanges
+    setScrollY([0, secondSectionEnd, thirdSectionEnd][index] ?? 0)
+  }, [sectionRanges])
+
+  /* 지도 포인터 다운 시각(휠 스크롤 무시용). 지도 컴포넌트에 전달 */
+  const handleMapPointerDown = useCallback(() => {
+    lastMapClickRef.current = Date.now()
+  }, [])
+
+  /* 첫 번째 섹션: 스케일·투명도 (스크롤 구간에 따라 계산) */
   const topSectionFadeOutEnd = sectionRanges.topSectionMax
   const topSectionFadeOutProgress = Math.max(0, Math.min(1, scrollY / topSectionFadeOutEnd))
   const topSectionScale = 1 - topSectionFadeOutProgress * 0.5
   const topSectionOpacity = 1 - topSectionFadeOutProgress
-  
-  // 두 번째 섹션 효과
+
+  /* 두 번째 섹션: 등장·유지·페이드아웃 구간별 스케일·투명도 */
   const { secondSectionStart, secondSectionEnd, secondSectionBufferEnd, secondSectionFadeOutEnd, thirdSectionStart, thirdSectionEnd, sectionBufferSize, transitionRange } = sectionRanges
   const secondSectionRange = secondSectionEnd - secondSectionStart
   const secondSectionProgress = scrollY < secondSectionStart 
@@ -439,8 +447,8 @@ function App() {
     secondSectionScale = 0.5
     secondSectionOpacity = 0
   }
-  
-  // 세 번째 섹션 효과
+
+  /* 세 번째 섹션: 등장·유지 구간별 스케일·투명도 */
   const thirdSectionBufferEnd = thirdSectionEnd + sectionBufferSize
   const thirdSectionRange = thirdSectionEnd - thirdSectionStart
   const thirdSectionProgress = thirdSectionRange > 0 
@@ -459,7 +467,7 @@ function App() {
     thirdSectionOpacity = 1.0
   }
 
-  // 현재 섹션 계산 (0: Welcome, 1: About, 2: Hello)
+  /* 현재 섹션 인덱스 (0: Welcome, 1: About, 2: Hello). 인디케이터·키보드에 사용 */
   const currentSection = useMemo(() => {
     if (scrollY < sectionRanges.topSectionMax) return 0
     if (scrollY >= sectionRanges.secondSectionStart && scrollY < sectionRanges.secondSectionFadeOutEnd) return 1
@@ -482,7 +490,7 @@ function App() {
         <Suspense fallback={null}>
           <ScrollIndicator />
           <ScrollToExplore language={language} translations={translations} />
-          <SectionIndicator currentSection={currentSection} />
+          <SectionIndicator currentSection={currentSection} onSectionClick={handleSectionClick} />
           <KeyboardShortcuts language={language} translations={translations} />
           <PerformanceMonitor />
         </Suspense>
@@ -650,17 +658,13 @@ function App() {
             }}
           >
             <div className="new-section-content">
-              <h1 
-                className="new-section-title"
-                style={{
-                  fontSize: 'clamp(2rem, 8vw, 6rem)',
-                  fontWeight: 'bold',
-                  textAlign: 'center',
-                  margin: 0
-                }}
-              >
-                안녕하세요
-              </h1>
+              <FootprintsMap
+                language={language}
+                t={t}
+                isDarkMode={isDarkMode}
+                onMapHoverChange={setIsMapHovered}
+                onMapPointerDown={handleMapPointerDown}
+              />
             </div>
           </section>
           </div>

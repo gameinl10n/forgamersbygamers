@@ -1,3 +1,4 @@
+/* 다국어 문구. 키 추가/수정 시 en, ko, zh 모두 맞춰 주세요. 지도 관련: mapGameMarkers, mapListTitleAcgn 등 */
 export const translations = {
   en: {
     title: 'About BYEONGUK',
@@ -21,6 +22,16 @@ export const translations = {
     welcomeSubtitle: "I love",
     welcomeQuote: 'By the Gamer, Of the Gamer, For the Gamer...',
     scrollToExplore: 'Scroll to explore',
+    sectionLabelWelcome: 'Welcome',
+    sectionLabelAbout: 'About',
+    sectionLabelThird: 'Footprints',
+    mapGameMarkers: 'Game / ACGN markers',
+    mapTravelMarkers: 'Travel markers',
+    mapListTitleAcgn: 'ACGN',
+    mapListTitleTravel: 'Travel',
+    mapRecenter: 'Back to default view',
+    mapPopupLoadingImage: 'Loading image...',
+    mapPopupImageError: 'Image could not be loaded',
     ipGreeting: 'You are connected from IP',
     rightClickBlocked: "Right-click is disabled. Anything I can help you with?"
   },
@@ -46,6 +57,16 @@ export const translations = {
     welcomeSubtitle: '난 좋아해',
     welcomeQuote: '게이머의, 게이머에 의한, 게이머를 위한...',
     scrollToExplore: '스크롤하여 탐색하기',
+    sectionLabelWelcome: '웰컴',
+    sectionLabelAbout: '소개',
+    sectionLabelThird: '발자국',
+    mapGameMarkers: '게임/ACGN 마커',
+    mapTravelMarkers: '여행 마커',
+    mapListTitleAcgn: 'ACGN',
+    mapListTitleTravel: 'Travel',
+    mapRecenter: '기본 보기로 돌아가기',
+    mapPopupLoadingImage: '이미지 불러오는 중...',
+    mapPopupImageError: '이미지를 불러올 수 없습니다',
     ipGreeting: '아이피에서 접속하셨습니다',
     rightClickBlocked: '아쉽지만 우클릭을 막아뒀어요! 무슨 일이시죠?'
   },
@@ -71,6 +92,16 @@ export const translations = {
     welcomeSubtitle: '我喜欢',
     welcomeQuote: '玩家的, 源自玩家, 成于玩家...',
     scrollToExplore: '滚动探索',
+    sectionLabelWelcome: '欢迎',
+    sectionLabelAbout: '关于',
+    sectionLabelThird: '足迹',
+    mapGameMarkers: '游戏/ACGN 标记',
+    mapTravelMarkers: '旅行 标记',
+    mapListTitleAcgn: 'ACGN',
+    mapListTitleTravel: 'Travel',
+    mapRecenter: '返回默认视图',
+    mapPopupLoadingImage: '正在加载图片...',
+    mapPopupImageError: '无法加载图片',
     ipGreeting: '您来自IP地址访问',
     rightClickBlocked: '很抱歉，右键已被禁用！有什么需要帮忙的吗？'
   }
